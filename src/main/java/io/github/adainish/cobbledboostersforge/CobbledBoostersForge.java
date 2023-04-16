@@ -1,11 +1,15 @@
 package io.github.adainish.cobbledboostersforge;
 
+import io.github.adainish.cobbledboostersforge.cmd.Command;
+import io.github.adainish.cobbledboostersforge.listener.PlayerListener;
 import io.github.adainish.cobbledboostersforge.scheduler.AsyncTask;
 import io.github.adainish.cobbledboostersforge.storage.BoosterStorage;
 import io.github.adainish.cobbledboostersforge.subscriptions.Subscriptions;
 import io.github.adainish.cobbledboostersforge.tasks.UpdateBoostersTask;
+import io.github.adainish.cobbledboostersforge.wrapper.PlayerWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -16,6 +20,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import net.minecraftforge.server.permission.events.PermissionGatherEvent;
+import net.minecraftforge.server.permission.nodes.PermissionNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +50,8 @@ public class CobbledBoostersForge {
 
     public List<AsyncTask> asyncTaskList = new ArrayList<>();
     public static Subscriptions subscriptions;
+
+    public static PlayerWrapper playerWrapper;
     public CobbledBoostersForge() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -64,6 +72,23 @@ public class CobbledBoostersForge {
         initDirs();
     }
 
+
+    //permission event
+    @SubscribeEvent
+    public void onPermissionRegistry(PermissionGatherEvent.Nodes event)
+    {
+        //register admin nodes
+
+    }
+
+    @SubscribeEvent
+    public void onCommandRegistry(RegisterCommandsEvent event) {
+
+        //register commands
+        event.getDispatcher().register(Command.getCommand());
+
+    }
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
@@ -74,10 +99,14 @@ public class CobbledBoostersForge {
 
         subscriptions = new Subscriptions();
 
+        playerWrapper = new PlayerWrapper();
+
         AsyncTask.Builder builder = new AsyncTask.Builder();
         AsyncTask task = builder.withInfiniteIterations().withInterval(20).withRunnable(new UpdateBoostersTask()).build();
         task.start();
         asyncTaskList.add(task);
+
+        MinecraftForge.EVENT_BUS.register(new PlayerListener());
     }
 
     @SubscribeEvent

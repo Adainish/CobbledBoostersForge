@@ -27,6 +27,32 @@ public class BoosterManager
         expired.forEach(s -> activeBoosters.remove(s));
     }
 
+    public String getBoosterStatus(String type)
+    {
+        if (activeBoosters.containsKey(type))
+            return "&4A Booster for this type is already active";
+        else return "&aA Booster can be activated for this type";
+    }
+
+    public boolean startNewBooster(Booster booster) throws Exception
+    {
+        if (booster == null)
+            throw new Exception("Error loading booster");
+
+        if (activeBoosters.containsKey(booster.getStartedAt())) {
+            throw new Exception("A Booster of this type is already active");
+        }
+        if (booster.getBoostPercentage() <= 0) {
+            throw new Exception("Percentage was less than or equal to 0, please provide a positive number");
+        }
+        if (booster.getBoostPercentage() <= 0) {
+            throw new Exception("The timer must be higher than 0 minutes");
+        }
+        booster.setStartedAt(System.currentTimeMillis());
+        booster.sendActivatedMessage();
+        activeBoosters.put(booster.getBoosterType(), booster);
+        return true;
+    }
     public boolean startNewBooster(BoosterType boosterType, double percentage, long timerMinutes) throws Exception
     {
         if (activeBoosters.containsKey(boosterType.name())) {
@@ -39,11 +65,12 @@ public class BoosterManager
         if (timerMinutes <= 0) {
             throw new Exception("The timer must be higher than 0 minutes");
         }
-        booster.boosterType = boosterType;
-        booster.boostPercentage = percentage;
-        booster.timerMinutes = timerMinutes;
-        booster.startedAt = System.currentTimeMillis();
+        booster.setBoosterType(boosterType.name());
+        booster.setBoostPercentage(percentage);
+        booster.setTimerMinutes(timerMinutes);
+        booster.setStartedAt(System.currentTimeMillis());
         booster.sendActivatedMessage();
+        activeBoosters.put(booster.getBoosterType(), booster);
         return true;
     }
 
