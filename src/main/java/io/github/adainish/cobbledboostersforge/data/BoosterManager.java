@@ -39,7 +39,7 @@ public class BoosterManager
         if (booster == null)
             throw new Exception("Error loading booster");
 
-        if (activeBoosters.containsKey(booster.getStartedAt())) {
+        if (activeBoosters.containsKey(booster.getBoosterType())) {
             throw new Exception("A Booster of this type is already active");
         }
         if (booster.getBoostPercentage() <= 0) {

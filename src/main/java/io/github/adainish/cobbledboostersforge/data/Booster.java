@@ -29,8 +29,9 @@ public class Booster
 
     public boolean shouldBoost(BoosterType boosterType)
     {
-        if (!this.getBoosterType().equalsIgnoreCase(boosterType.name()))
+        if (!this.getBoosterType().equalsIgnoreCase(boosterType.name())) {
             return false;
+        }
         return getRandomChance() <= getBoostPercentage();
     }
 
