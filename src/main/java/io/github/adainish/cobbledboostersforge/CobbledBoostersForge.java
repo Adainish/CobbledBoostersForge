@@ -1,6 +1,7 @@
 package io.github.adainish.cobbledboostersforge;
 
 import io.github.adainish.cobbledboostersforge.cmd.Command;
+import io.github.adainish.cobbledboostersforge.conf.LanguageConfig;
 import io.github.adainish.cobbledboostersforge.listener.PlayerListener;
 import io.github.adainish.cobbledboostersforge.scheduler.AsyncTask;
 import io.github.adainish.cobbledboostersforge.storage.BoosterStorage;
@@ -52,6 +53,7 @@ public class CobbledBoostersForge {
     public static Subscriptions subscriptions;
 
     public static PlayerWrapper playerWrapper;
+    public static LanguageConfig languageConfig;
     public CobbledBoostersForge() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -137,6 +139,11 @@ public class CobbledBoostersForge {
     public void initConfig()
     {
         //nothing really happens here yet
+        log.warn("Writing language config if not present yet...");
+        LanguageConfig.writeConfig();
+        log.warn("Loading language config");
+        languageConfig = new LanguageConfig();
+
     }
 
     public void initStorage()

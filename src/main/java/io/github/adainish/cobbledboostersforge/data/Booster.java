@@ -2,6 +2,7 @@ package io.github.adainish.cobbledboostersforge.data;
 
 import com.cobblemon.mod.common.api.pokemon.stats.Stats;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import io.github.adainish.cobbledboostersforge.CobbledBoostersForge;
 import io.github.adainish.cobbledboostersforge.enumerations.BoosterType;
 import io.github.adainish.cobbledboostersforge.util.RandomHelper;
 import io.github.adainish.cobbledboostersforge.util.Util;
@@ -72,11 +73,11 @@ public class Booster
                     continue;
                 }
             }
-            total += pokemon.getIvs().get(st);
+            total += pokemon.getIvs().getOrDefault(st);
         }
 
         double percentage = (double)total / 186.0 * 100.0;
-        return Math.floor(percentage * Math.pow(10.0, (double)decimalPlaces)) / Math.pow(10.0, (double)decimalPlaces);
+        return Math.floor(percentage * Math.pow(10.0, decimalPlaces)) / Math.pow(10.0, decimalPlaces);
     }
 
     public Stats getRandomStatType() {
@@ -105,14 +106,14 @@ public class Booster
 
     public void sendExpiredBroadCast()
     {
-     Util.doBroadcast("&cThe %amount%x %type% has expired..."
+     Util.doBroadcast(CobbledBoostersForge.languageConfig.expiredMessage
              .replace("%amount%", String.valueOf(getBoostPercentage()))
              .replace("%type%", getBoosterType()));
     }
 
     public void sendActivatedMessage()
     {
-        Util.doBroadcast("&aA %amount%x %type% Booster has started that lasts for %timer%"
+        Util.doBroadcast(CobbledBoostersForge.languageConfig.activatedMessage
                 .replace("%amount%", String.valueOf(getBoostPercentage()))
                 .replace("%type%", getBoosterType())
                 .replace("%timer%", timeLeftInHoursMinutesFromString())

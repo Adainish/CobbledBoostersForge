@@ -94,11 +94,9 @@ public class Player
                                 boosterList.remove(b);
                                 this.save();
                                 UIManager.closeUI(buttonAction.getPlayer());
-                            } else {
-                                //send fail message
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            Util.send(buttonAction.getPlayer().getUUID(), e.getMessage());
                         }
 
                     })

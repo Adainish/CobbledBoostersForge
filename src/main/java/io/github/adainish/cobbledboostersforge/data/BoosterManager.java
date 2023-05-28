@@ -45,7 +45,7 @@ public class BoosterManager
         if (booster.getBoostPercentage() <= 0) {
             throw new Exception("Percentage was less than or equal to 0, please provide a positive number");
         }
-        if (booster.getBoostPercentage() <= 0) {
+        if (booster.getTimeLeftInLong() <= 0) {
             throw new Exception("The timer must be higher than 0 minutes");
         }
         booster.setStartedAt(System.currentTimeMillis());
